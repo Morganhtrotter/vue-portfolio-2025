@@ -6,7 +6,7 @@
         <div class="welcome-text-wrapper">
             <h1>Hello, my name is <span>Morgan.</span></h1>
             <h2>I'm a Front End Web Developer</h2>
-            <a>View my work</a>
+            <a href="#my-work-header">View my work</a>
         </div>
     </div>
 </template>
@@ -15,10 +15,6 @@ import * as d3 from 'd3';
 import { onMounted, ref } from 'vue';
 
 const svgRef = ref(null);
-const data = [20, 50, 30, 70, 40];
-
-
-//const svg = d3.select('#canvas').append('svg').attr("preserveAspectRatio", "xMinYMin meet").attr("viewBox", "0 0 960 500");
 
 onMounted(() => {
     const svg = d3.select(svgRef.value);
@@ -60,16 +56,19 @@ onMounted(() => {
         .attr('cx', (d) => d.dx * circleSpacing)
         .attr('cy', (d) => d.dy * circleSpacing)
         .attr('r', d => d.r)
+        .style('fill', d => d.color)
         .attr('fill', d => d.color)
         .attr('stroke', "#010101")
         .attr('stroke-width', "1px")
         .attr('stroke-opacity', "0.15")
         .attr('class', 'circle')
         .on("mouseover", function(event, d) {
+            const red = d3.randomInt(1, 256)();
+            const green = d3.randomInt(1, 256)();
+            const blue = d3.randomInt(1, 256)();
+
             d3.select(this)
-                .style("fill", "red")
-                .style("stroke", "black")
-                .style("stroke-width", "2px");
+                .style('fill', d3.rgb(red, green, blue));
         })
         .on("mouseout", function(event, d) {
             d3.select(this)
@@ -78,8 +77,10 @@ onMounted(() => {
                 .style("fill", this.color);
         })
         .on("click", function(event, d) {
+
             d3.select(this)
-                .style("stroke", "white");
+                .style("fill", "#FFD23F")
+                .attr("fill", "#FFD23F");
         });
 });
 </script>
@@ -95,9 +96,30 @@ svg {
     top: -70vh;
     font-size: 44px;
     pointer-events: none;
+    color: white;
+}
+
+.welcome-text-wrapper a {
+    pointer-events: auto;
+    background: linear-gradient(#2176AE 0 0) no-repeat;
+    border-radius: 4px;
+    background-position: 0 60px;
+    transition: all 0.5s ease-out;
+    padding: 8px 24px;
+    color: #65717E;
+}
+
+.welcome-text-wrapper a:hover {
+    cursor: pointer;
+    background-position: 0;
+    color: #1E1E24;
 }
 
 .welcome-text-wrapper span {
-    color: red;
+    color: #FFD23F;
+}
+
+h2 {
+    color: #CBD1D8;
 }
 </style>

@@ -12,6 +12,7 @@ import WelcomeVisualization from './components/WelcomeVisualization.vue';
     <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
+      <h1 id="my-work-header">My Work</h1>
       <HelloWorld msg="I did it, nobody else..." />
     </div>
   </header>
