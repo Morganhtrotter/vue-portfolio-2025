@@ -22,25 +22,70 @@ const data = [20, 50, 30, 70, 40];
 
 onMounted(() => {
     const svg = d3.select(svgRef.value);
-      const width = 500;
-      const height = 300;
+    const circleSpacing = 20;
 
-      const barWidth = width / data.length;
+    let horizontalCircles = [...Array(200)];
+    let verticalCircles = [...Array(100)];
+    let finalArray = [];
+    verticalCircles.forEach((item, i) => {
+        const nodes = horizontalCircles.map((temp, j) => {
+            const dx = j;
+            const dy = i;
+            const r = d3.randomUniform(4, 8)();
+            const colorIndex = d3.randomInt(1, 8)();
+            const red = d3.randomInt(40, 100)();
+            const green = d3.randomInt(10, 230)();
+            const blue = d3.randomInt(60, 250)();
+            const alpha = Math.random();
+            return {
+                r: r,
+                dx: dx,
+                dy: dy,
+                color: d3.rgb(red, green, blue, 0.15),
+            };
+        });
+        finalArray.push(nodes);
+    });
 
-      svg.selectAll('rect')
-        .data(data)
+    svg
+        .append('g')
+        .selectAll('g')
+        .data(finalArray)
         .enter()
-        .append('rect')
-        .attr('x', (d, i) => i * barWidth)
-        .attr('y', d => height - d)
-        .attr('width', barWidth - 2)
-        .attr('height', d => d)
-        .attr('fill', 'steelblue');
+        .append('g')
+        .selectAll('circle')
+        .data((d) => d)
+        .enter()
+        .append("circle")
+        .attr('cx', (d) => d.dx * circleSpacing)
+        .attr('cy', (d) => d.dy * circleSpacing)
+        .attr('r', d => d.r)
+        .attr('fill', d => d.color)
+        .attr('stroke', "#010101")
+        .attr('stroke-width', "1px")
+        .attr('stroke-opacity', "0.15")
+        .attr('class', 'circle')
+        .on("mouseover", function(event, d) {
+            d3.select(this)
+                .style("fill", "red")
+                .style("stroke", "black")
+                .style("stroke-width", "2px");
+        })
+        .on("mouseout", function(event, d) {
+            d3.select(this)
+                .transition()
+                .duration(750)
+                .style("fill", this.color);
+        })
+        .on("click", function(event, d) {
+            d3.select(this)
+                .style("stroke", "white");
+        });
 });
 </script>
 <style scoped>
 svg {
-    background-color: #253238;
+    background-color: #272838;
 }
 
 .welcome-text-wrapper {
@@ -49,6 +94,7 @@ svg {
     text-align: center;
     top: -70vh;
     font-size: 44px;
+    pointer-events: none;
 }
 
 .welcome-text-wrapper span {
